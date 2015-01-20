@@ -1,7 +1,6 @@
 The uWSGI project
 =================
 
-The uWSGI project aims at developing a full stack for building hosting services.
 uWSGI 项目致力于为构建一个全栈式的托管服务。
 
 应用服务器（多种编程语言和协议），代理，进程管理器和监视器

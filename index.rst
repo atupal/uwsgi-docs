@@ -2,37 +2,59 @@ The uWSGI project
 =================
 
 The uWSGI project aims at developing a full stack for building hosting services.
+uWSGI 项目致力于为构建一个全栈式的托管服务。
 
 Application servers (for various programming languages and protocols), proxies, process managers and monitors are all implemented
 using a common api and a common configuration style.
+应用服务器（多种编程语言和协议），代理，进程管理器和监视器
+全部都以通用 api 和通用配置风格实现了。
 
 Thanks to its pluggable architecture it can be extended to support more platforms and languages. 
+得益于它的可插式架构，它可以被拓展到其他更多的平台和语言。
 
 Currently, you can write plugins in C, C++ and Objective-C.
+目前你可以使用 C，C++ 和 Objective-C 来写插件。
 
 The "WSGI" part in the name is a tribute to the namesake Python standard, as it has been the first developed plugin for the project.
+名字中的 ”WSGI“ 部分是对 Python 标准中的同名一个东西的致敬，因为它
+是这个项目的第一个开发的插件。
 
 Versatility, performance, low-resource usage and reliability are the strengths of the project (and the only rules followed).
+多功能，高性能，占用资源少和可靠性是这个项目的优势（也是唯一遵循的规则）。
 
 Included components (updated to latest stable release)
 ======================================================
+包含的组件（更新到了最新的稳定发行版）
+======================================================
 
 The Core (implements configuration, processes management, sockets creation, monitoring, logging, shared memory areas, ipc, cluster membership and the :doc:`SubscriptionServer`)
+核心（实现了配置，进程管理，创建 socket，监控，日志，共享内存，进程间通信，
+集群成员和 :doc:`SubscriptionServer` ）
 
 Request plugins (implement application server interfaces for various languages and platforms: WSGI, PSGI, Rack, Lua WSAPI, CGI, PHP, Go ...)
+请求插件（实现了多种语言和平台的应用服务器接口： WSGI，PSGI，Rack，Lua WSAPI，CGI，PHP，Go ...）
 
 Gateways (implement load balancers, proxies and routers)
+网关（实现了负载均衡，代理和路由器）
 
 The :doc:`Emperor <Emperor>` (implements massive instances management and monitoring)
+The :doc:`Emperor <Emperor>` （实现了对大量实例的管理和监控）
 
 Loop engines (implement events and concurrency, components can be run in preforking, threaded, asynchronous/evented and green thread/coroutine modes. Various technologies are supported, including uGreen, Greenlet, Stackless, :doc:`Gevent <Gevent>`, Coro::AnyEvent, :doc:`Tornado <Tornado>`, Goroutines and Fibers)
+循环引擎（实现了事件和并发，组件可以以 preforking，threaded，asynchronous/evented 和 
+green thread/coroutine 模式运行。支持包括 uGreen，Greenlet，Stackless 多种技术，
+:doc:`Gevent <Gevent>` , Coro::AnyEvent, :doc:`Tornado <Tornado>`, Goroutines 和 Fibers）
 
 .. note::
 
   uWSGI is a very active project with a fast release cycle. For this reason the code and the documentation may not always be in sync.
+  uWSGI 是一个发布周期非常快的活跃项目。所以代码和文档并不总是同步的。
   We try to make our best to have good documentation but it is a hard work. Sorry for that.
+  我们尽最大的努力来保证文档的质量，但这很难。请原谅。
   If you are in trouble, the mailing list is the best source for help regarding uWSGI.
+  如果你遇到了麻烦，邮件列表是解决与 uWSGI 有关问题的最佳地方。
   Contributors for documentation (in addition to code) are always welcome.
+  欢迎为文档（以及代码）贡献。
 
 
 Quickstarts

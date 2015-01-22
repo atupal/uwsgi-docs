@@ -18,16 +18,16 @@ uWSGI 项目致力于为构建一个全栈式的托管服务。
 包含的组件（更新到了最新的稳定发行版）
 ======================================================
 
-核心（实现了配置，进程管理，创建 socket，监控，日志，共享内存，进程间通信，
+核心 Core （实现了配置，进程管理，创建 socket，监控，日志，共享内存，进程间通信，
 集群成员和 :doc:`SubscriptionServer` ）
 
-请求插件（实现了多种语言和平台的应用服务器接口： WSGI，PSGI，Rack，Lua WSAPI，CGI，PHP，Go ...）
+请求插件 Request plugins （实现了多种语言和平台的应用服务器接口： WSGI，PSGI，Rack，Lua WSAPI，CGI，PHP，Go ...）
 
-网关（实现了负载均衡，代理和路由器）
+网关 Gateways （实现了负载均衡，代理和路由器）
 
 The :doc:`Emperor <Emperor>` （实现了对大量实例的管理和监控）
 
-循环引擎（实现了事件和并发，组件可以以 preforking，threaded，asynchronous/evented 和 
+循环引擎 Loop engines （实现了事件和并发，组件可以以 preforking，threaded，asynchronous/evented 和 
 green thread/coroutine 模式运行。支持包括 uGreen，Greenlet，Stackless 多种技术，
 :doc:`Gevent <Gevent>` , Coro::AnyEvent, :doc:`Tornado <Tornado>`, Goroutines 和 Fibers）
 
@@ -39,8 +39,8 @@ green thread/coroutine 模式运行。支持包括 uGreen，Greenlet，Stackless
   欢迎为文档（以及代码）贡献。
 
 
-Quickstarts
-===========
+快速入门
+========
 
 .. toctree::
    :maxdepth: 1
@@ -51,45 +51,45 @@ Quickstarts
    Snippets
 
 
-Table of Contents
-=================
+目录表
+======
 
 .. toctree::
    :maxdepth: 1
 
-   Download
-   Install
-   BuildSystem
-   Management
-   LanguagesAndPlatforms
-   SupportedPlatforms
-   WebServers
-   FAQ
-   ThingsToKnow
-   Configuration
-   FallbackConfig
-   ConfigLogic
-   Options
-   CustomOptions
-   ParsingOrder
-   Vars
-   Protocol
-   AttachingDaemons
+   下载
+   安装
+   构建系统
+   管理
+   语言和平台
+   支持的平台
+   Web 服务
+   FAQ(常见问题和答案)
+   需要知道的事
+   配置
+   Fallback 配置
+   配置逻辑
+   选项
+   定制选项
+   解析顺序
+   变量
+   协议
+   守护进程
    MasterFIFO
-   Inetd
-   Upstart
+   超级守护进程(Inetd)
+   启动(Upstart)
    Systemd
    Circus
-   Embed
-   Logging
-   LogFormat
-   LogEncoders
-   Hooks
-   Glossary
-   ThirdPartyPlugins
+   嵌入
+   日志
+   日志格式
+   日志编码
+   钩子
+   术语表
+   第三方插件
    
-Tutorials
-=========
+教程
+====
 
 .. toctree::
    :maxdepth: 1
@@ -118,29 +118,29 @@ Articles
    
    
 
-uWSGI Subsystems
-================
+uWSGI 子系统
+============
 
 .. toctree::
    :maxdepth: 1
    
-   AlarmSubsystem
-   Caching
-   WebCaching
-   Cron
-   Fastrouter
-   InternalRouting
+   报警系统
+   缓存
+   Web 缓存
+   计划任务(Cron)
+   快速路由(Fastrouter)
+   内部路由(InternalRouting)
    Legion
-   Locks
+   锁
    Mules
-   OffloadSubsystem
-   Queue
-   RPC
-   SharedArea
-   Signals
+   卸载子系统(OffloadSubsystem)
+   队列
+   远程过程调用(RPC)
+   共享区域(SharedArea)
+   信号
    Spooler
-   SubscriptionServer
-   StaticFiles
+   订阅服务器
+   静态文件
    SNI
    GeoIP
    Transformations
@@ -161,7 +161,7 @@ Scaling with uWSGI
    DynamicApps
    SSLScaling
 
-Securing uWSGI
+让 uWSGI 更安全
 ==============
 
 .. toctree::
@@ -176,8 +176,8 @@ Securing uWSGI
    TunTapRouter
 
 
-Keeping an eye on your apps
-===========================
+盯着你的应用(Keeping an eye on your apps)
+=========================================
 
 .. toctree::
    :maxdepth: 1
@@ -190,8 +190,8 @@ Keeping an eye on your apps
    Metrics
 
 
-Async and loop engines
-======================
+异步和循环引擎 (Async and loop engines)
+=======================================
 
 .. toctree::
    :maxdepth: 1
@@ -205,7 +205,7 @@ Async and loop engines
 
 
 
-Web Server support
+支持的 Web 服务器
 ==================
    
 .. toctree::
@@ -221,8 +221,8 @@ Web Server support
    Nginx
 
 
-Language support
-==================
+语言支持
+========
    
 .. toctree::
    :maxdepth: 2
@@ -245,8 +245,8 @@ Language support
    GlusterFS
    Rados
 
-Other plugins
-=============
+其他插件
+========
 
 .. toctree::
    :maxdepth: 1
@@ -256,7 +256,7 @@ Other plugins
    LDAP
 
 
-Broken/deprecated features
+弃用(Broken/deprecated)特性
 ==========================
 
 .. toctree::
@@ -267,11 +267,11 @@ Broken/deprecated features
    Go
 
 
-Release Notes
-=============
+发布说明
+========
 
-Stable releases
----------------
+稳定版
+------
 
 .. toctree::
    :maxdepth: 1
@@ -309,8 +309,8 @@ Stable releases
    Changelog-1.9.1
    Changelog-1.9
    
-LTS releases
-------------
+长期支持版(LTS)
+---------------
 
 .. toctree::
    :maxdepth: 1
@@ -318,7 +318,7 @@ LTS releases
    Changelog-1.4.10
 
 
-Contact
+联系信息
 =======
 
 ================== =
@@ -331,22 +331,26 @@ Commercial support http://unbit.com/
 
 .
 
-Commercial support
-==================
+商业支持
+========
 
-You can buy commercial support from http://unbit.com
+你可以从 http://unbit.com 购买商业支持
 
-Donate
-======
+捐助
+====
 
-uWSGI development is sponsored by the Italian ISP `Unbit <http://unbit.it/>`_ and its customers. You can buy commercial support and licensing. If you are not an Unbit customer, or you cannot/do not want to buy a commercial uWSGI license, consider making a donation. Obviously please feel free to ask for new features in your donation.
+uWSGI 的开发由意大利互联网服务提供商 `Unbit <http://unbit.it/>`_ 以及它的客户
+支持。你可以购买商业支持和许可。如果你不是 Unbit 的客户或者你不想购买一个商业的
+uWSGI 许可，你可以考虑捐助。显然你可以在你的捐助中随意询问想要的新特性。
 
-We will give credit to everyone who wants to sponsor new features.
+我们将会把支持开发新特性的人加到 credit 里。
 
-See the `old uWSGI site <http://projects.unbit.it/uwsgi/#Donateifyouwant>`_ for the donation link. You can also donate via `GitTip <https://www.gittip.com/unbit/>`_.
+请看 `old uWSGI site <http://projects.unbit.it/uwsgi/#Donateifyouwant>`_  来获取捐助链接。
+你可以通过 `GitTip <https://www.gittip.com/unbit/>`_ 捐助。
 
-Indices and tables
-==================
+
+索引和查询
+==========
 
 * :ref:`genindex`
 * :ref:`modindex`

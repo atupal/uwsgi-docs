@@ -1,49 +1,52 @@
-Quickstart for perl/PSGI applications
-=====================================
+perl/PSGI 应用快速入门
+======================
 
 
-The following instructions will guide you through installing and running a perl-based uWSGI distribution, aimed at running PSGI apps.
+下面的说明将会引导你安装运行一个基于 perl 的目的在于运行 PSGI apps 的 uWSGI 发行版。
 
 
-Installing uWSGI with Perl support
-**********************************
+安装带 Perl 支持的 uWSGI
+************************
 
-To build uWSGI you need a c compiler (gcc and clang are supported) and the python binary (it will only run the uwsgiconfig.py script that will execute the various
-compilation steps). As we are building a uWSGI binary with perl support we need perl development headers too (libperl-dev package on debian-based distros)
+为了构建 uWSGI 你需要一个 c 编译器(gcc 和 clang 都支持)以及 python 二进制文件(它只会用于运行 uwsgiconfig.py
+脚本来执行一些比较复杂的步骤)。
+为了构建带有 perl 支持的 uWSGI 二进制文件我们也需要 perl 开发版的头文件(在 debian 系发行版上是
+libperl-dev 这个包)。
 
-You can build uWSGI manually:
+你可以手动构建 uWSGI：
 
 .. code-block:: sh
 
    python uwsgiconfig.py --build psgi
    
-that is the same as
+这和下面一样：
 
 
 .. code-block:: sh
 
    UWSGI_PROFILE=psgi make
    
-or using the network installer:
+或者使用网络安装：
 
 .. code-block:: sh
 
    curl http://uwsgi.it/install | bash -s psgi /tmp/uwsgi
    
-that will create a uWSGI binary in /tmp/uwsgi (feel free to change the path to whatever you want)
+这将会在 /tmp/uwsgi (你可以随便改变成你想要的路径) 目录下创建一个 uWSGI 二进制文件。
 
-Note for distro packages
-************************
+使用发行版包需要注意的地方
+**************************
 
-You distribution very probably contains a uWSGI package set. Those uWSGI packages tend to be highly modulars, so in addition to the core you need to install
-the required plugins. Plugins must be loaded in your configs. In the learning phase we strongly suggest to not use distribution packages to easily follow documentation and tutorials.
+你的发行版很有可能已经包含了一个 uWSGI 的包集合。这些 uWSGI 包趋向于高度模块化，
+所以除了 core 你还需要安装需要的插件。
+在你的配置中插件必须被加载。在学习阶段我们强烈建议不要使用发行版的包，简单地跟着文档和教程走就可以了。
 
-Once you feel confortable with the "uWSGI way" you can choose the best approach for your deployments.
+一旦你对 "uWSGI 方式" 感到习惯了，你可以为你的部署选择最好的途径。
 
-Your first PSGI app
+你的第一个 PSGI 应用
 *******************
 
-save it to a file named myapp.pl
+把它以 myapp.pl 文件名保存
 
 .. code-block:: pl
 
@@ -56,48 +59,53 @@ save it to a file named myapp.pl
         ];
    };
 
-then run it via uWSGI in http mode:
+然后以 http 模式运行 uWSGI：
 
 .. code-block:: sh
 
    uwsgi --http :8080 --http-modifier1 5 --psgi myapp.pl
 
-(remember to replace 'uwsgi' if it is not in your current $PATH)
+(如果 uwsgi 不在你当前的 $PATH 里的话记着替换它)
 
-or if you are using a modular build (like the one of your distro)
+或者如果你使用了模块化安装(比如你的发行版里的包)
 
 .. code-block:: sh
 
    uwsgi --plugins http,psgi --http :8080 --http-modifier1 5 --psgi myapp.pl
    
-.. note:: Do not use --http when you have a frontend webserver, use --http-socket. Continue reading the quickstart to understand why.
+.. note:: 当你有一个前段 web 服务器的时候不要使用 -http 选项，使用 --http-socket。继续阅读这个快速入门你就会明白为什么要这么做
 
-What is that '--http-modifier1 5' thing ???
-*******************************************
+'--http-modifier1 5' 是什么鬼？？？
+**********************************
 
-uWSGI supports various languages and platform. When the server receives a request it has to know where to 'route' it.
+uWSGI 支持多种语言和平台。当服务器收到一个请求时它必须知道“路由”它到哪里去。
 
-Each uWSGI plugin has an assigned number (the modifier), the perl/psgi one has the 5. So --http-modifier1 5 means "route to the psgi plugin"
+每一个 uWSGI 插件都有一个分配的数字(modifier)，perl/psgi 的数字是 5。所以 --http-modifier1 5 
+表示“路由到 psgi 插件”。
 
-Albeit uWSGI has a more "human-friendly" :doc:`internal routing system <InternalRouting>` using modifiers is the fastest way, so, if possible always use them
+虽然 uWSGI 有一个更“友好”的 :doc:`internal routing system <InternalRouting>` ，但使用
+modifier 仍然是最快的方式，所以尽可能地使用他们。
 
 
-Using a full webserver: nginx
-*****************************
+使用一个完整的 web 服务器：nginx
+********************************
 
-The supplied http router, is (yes, incredible) only a router. You can use it as a load balancer or a proxy, but if you need a full webserver (for efficiently serving static files or all of those task a webserver is good at), you can get rid of the uwsgi http router (remember to change --plugins http,psgi to --plugins psgi if you are using a modular build) and put your app behind nginx.
+提供的 http 路由器仅仅就是一个路由器(是的，难以置信)。你可以使用它作为负载均衡器或者代理，
+但是如果你需要一个完整的 web 服务器(比如为了高性能地提供静态文件访问或者那些 web 服务器更适合的工作)，
+使用 uwsig http 路由器有风险(记住把 --plugins http,psgi 改成 --plugins psgi 如果你是模块化安装的话)，
+你应该把你的应用放在 nginx 后面。
 
-To communicate with nginx, uWSGI can use various protocol: http, uwsgi, fastcgi, scgi...
+为了和 nginx 通信，uWSGI 可以使用多种协议：http，uwsgi，fastcgi，scgi...
 
-The most efficient one is the uwsgi one. Nginx includes uwsgi protocol support out of the box.
+性能最高的是 uwsgi。Nginx 提供了开箱即用的 uwsgi 协议支持。
 
-Run your psgi application on a uwsgi socket:
+使用 uwsgi socket 运行你的 psgi 应用：
 
 .. code-block:: sh
 
    uwsgi --socket 127.0.0.1:3031 --psgi myapp.pl
 
-then add a location stanza in your nginx config
+然后在你的 nginx 配置中加一个 location 节：
 
 
 .. code-block:: c
@@ -108,87 +116,89 @@ then add a location stanza in your nginx config
        uwsgi_modifier1 5;
    }
 
-Reload your nginx server, and it should start proxying requests to your uWSGI instance
+重启你的 nginx 服务器，然后它就会启动请求到你的 uWSGI 实例之间的代理。
 
-Note that you do not need to configure uWSGI to set a specific modifier, nginx will do it using the ``uwsgi_modifier1 5;`` directive
+注意你不需要把你的 uWSGI 配置一个特殊的 modifier，nginx 将会使用 ``uwsgi_modifier1 5;`` 指令。
 
-If your proxy/webserver/router speaks HTTP, you have to tell uWSGI to natively speak the http protocol (this is different from --http that will spawn a proxy by itself):
+如果你的代理/web 服务器/路由器 使用 HTTP，你需要告诉 uWSGI 使用 http 协议(这与 --http 不同，后者
+会自己 spawn 一个代理):
 
 .. code-block:: sh
 
    uwsgi --http-socket 127.0.0.1:3031 --http-socket-modifier1 5 --psgi myapp.pl
    
-as you can see we needed to specify the modifier1 to use, as the http protocol cannot carry this kind of information
+正如你看到的我们需要指定 modifier1，因为 http 协议不能附带这种信息。
 
 
-Adding concurrency
-******************
+添加并发
+********
 
-You can give concurrency to to your app via multiprocess,multithreading or various async modes.
+你可以通过多进程，多线程或者各种异步模式来给你的应用添加并发。
 
-To spawn additional processes use the --processes option
+要 spawn 更多的进程，使用 --processes 选项
 
 .. code-block:: sh
 
    uwsgi --socket 127.0.0.1:3031 --psgi myapp.pl --processes 4
 
-To have additional threads use --threads
+要使用更多的线程，使用 --threads
 
 .. code-block:: sh
 
    uwsgi --socket 127.0.0.1:3031 --psgi myapp.pl --threads 8
 
-Or both if you feel exotic
+或者两者都用
 
 .. code-block:: sh
 
    uwsgi --socket 127.0.0.1:3031 --psgi myapp.pl --threads 8 --processes 4
    
-A very common non-blocking/coroutine library in the perl world is Coro::AnyEvent. uWSGI can use it (even combined with multiprocessing) simply including the ``coroae`` plugin.
+在 perl 世界中一个非常常见的非堵塞/协程库就是 Coro::AnyEvent 。uWSGi 简单
+包含 ``coroae`` 插件就可以使用它了。
 
-To build a uWSGI binary with ``coroae`` support just run
+要编译一个带有 ``coroae`` 支持的 uWSGI 二进制文件只需运行：
 
 .. code-block:: sh
 
    UWSGI_PROFILE=coroae make
    
-or
+或者
 
 .. code-block:: sh
 
    curl http://uwsgi.it/install | bash -s coroae /tmp/uwsgi
    
-you will end with a uWSGI binary including both the ``psgi`` and ``coroae`` plugins.
+你将会得到一个带有 ``psgi`` 和 ``coroae`` 插件的 uWSGI 二进制文件。
 
-Now run your application in Coro::AnyEvent mode:
+现在用 Coro::AnyEvent 模式来运行你的应用：
 
 
 .. code-block:: sh
 
    uwsgi --socket 127.0.0.1:3031 --psgi myapp.pl --coroae 1000 --processes 4
    
-it will run 4 processes each able to manage up to 1000 coroutines (or Coro microthreads).
+它会运行 4 个进程，每个进程可以管理 1000 个协程(或者 Coro 微线程)。
 
 
-Adding robustness: the Master process
-*************************************
+增加鲁棒性：主进程
+******************
 
-It is highly recommended to have the master process always running on productions apps.
+非常推荐的做法是在生成环境中的应用全部都运行主进程。
 
-It will constantly monitor your processes/threads and will add funny features like the :doc:`StatsServer`
+它会持续地监控你的进程/线程，并且会像 :doc:`StatsServer` 一样将会添加更多有趣的特性。
 
-To enable the master simply add --master
+要使用主进程只需要加上 --master 选项
 
 .. code-block:: sh
 
    uwsgi --socket 127.0.0.1:3031 --psgi myapp.pl --processes 4 --master
    
-Using config files
-******************
+使用配置文件
+************
 
-uWSGI has literally hundreds of options. Dealing with them via command line is basically silly, so try to always use config files.
-uWSGI supports various standards (xml, .ini, json, yaml...). Moving from one to another is pretty simple. The same options you can use via command line can be used
-on config files simply removing the ``--`` prefix:
+uWSGI 提供了好几百个选限报告。通过命令行去处理它们是愚蠢的，所以尽量使用配置文件。
+uWSGI 支持多种标准(xml, .ini, json, yaml...)。从一个标准变成另一个非常简单。
+所有你在命令行中可以使用的选项只要去掉 ``--`` 前缀就可以用在配置文件中。
 
 .. code-block:: ini
 
@@ -198,7 +208,7 @@ on config files simply removing the ``--`` prefix:
    processes = 4
    master = true
    
-or xml:
+或者 xml：
 
 .. code-block:: xml
 
@@ -209,14 +219,14 @@ or xml:
      <master/>
    </uwsgi>
    
-To run uWSGI using a config file, just specify it as argument:
+要用配置文件来运行 uWSGI，只需要通过参数来指定它就可以了：
 
 .. code-block:: sh
 
    uwsgi yourconfig.ini
    
-if for some reason your config cannot end with the expected extension (.ini, .xml, .yml, .js) you can force the binary to
-use a specific parser in this way:
+如果出于某种原因你的配置文件不能以正常的拓展名(.ini, .xml, .yml, .js)结尾，
+你可以用下面这种方式来强制 uWSGI 使用指定的解析器：
 
 .. code-block:: sh
 
@@ -230,29 +240,32 @@ use a specific parser in this way:
 
    uwsgi --yaml yourconfig.foo
 
-and so on
+等等
 
-You can even pipe configs (using the dash to force reading from stdin):
+你甚至可以使用管道流式配置(使用 - 强制从标准输入读取)：
 
 .. code-block:: sh
 
    perl myjsonconfig_generator.pl | uwsgi --json -
 
 
-Automatically starting uWSGI on boot
-************************************
+自动启动 uWSGI
+**************
 
-If you are thinking about writing some init.d script for spawning uWSGI, just sit (and calm) down and check if your system does not offer you a better (more modern) approach.
+如果你打算写一些 init.d 脚本来启动 uWSGI，坐下来冷静一下，然后检查你的系统是否
+真的没有提供更好的(现代化)的方式。
 
-Each distribution has chosen a startup system (:doc:`Upstart<Upstart>`, :doc:`Systemd`...) and there are tons of process managers available (supervisord, god...).
+每一个发行版会选择一个启动系统 (:doc:`Upstart<Upstart>`, :doc:`Systemd`...) 除此之外也许多
+进程管理工具 (supervisord, god...) 。
 
 uWSGI will integrate very well with all of them (we hope), but if you plan to deploy a big number of apps check the uWSGI :doc:`Emperor<Emperor>`
-it is the dream of every devops.
+uWSGI 与上面列出的那些工具都集成得很好(我们希望如此)，但是如果你想部署大量应用的话，看
+看 uWSGI 的 :doc:`Emperor<Emperor>` 。它是每个运维开发的梦想。
 
-Security and availability
-*************************
+安全和可用性
+************
 
-ALWAYS avoid running your uWSGI instances as root. You can drop privileges using the uid and gid options
+永远 不要使用 root 来运行 uWSGI 实例。你可以用 uid 和 gid 选项来降低权限：
 
 .. code-block:: ini
 
@@ -266,9 +279,11 @@ ALWAYS avoid running your uWSGI instances as root. You can drop privileges using
    processes = 8
 
 
-A common problem with webapp deployment is "stuck requests". All of your threads/workers are stuck blocked on a request and your app cannot accept more of them.
+web 应用开发一个最常见的问题就是 “stuck requests”(卡住的请求)。你所有的线程/worker 都被卡住(被请求堵塞)， 
+然后你的应用再也不能接受更多的请求。
 
-To avoid that problem you can set an ``harakiri`` timer. It is a monitor (managed by the master process) that will destroy processes stuck for more than the specified number of seconds
+为了避免这个问题你可以设置一个 harakiri 计时器。它是一个监视器(由主进程管理)，
+当进程被卡住的时间超过特定的秒数后就销毁这个进程。
 
 .. code-block:: ini
 
@@ -282,11 +297,12 @@ To avoid that problem you can set an ``harakiri`` timer. It is a monitor (manage
    processes = 8
    harakiri = 30
 
-will destroy workers blocked for more than 30 seconds. Choose carefully the harakiri value !!!
+上面的配置会将卡住超过 30 秒的 worker 销毁。慎重选择 harakiri 的值 !!!
 
-In addition to this, since uWSGI 1.9, the stats server exports the whole set of request variables, so you can see (in realtime) what your instance is doing (for each worker, thread or async core)
+另外，从 uWSGI 1.9 起，统计服务器会输出所有的请求变量，所以你可以(实时地)查看你的
+实例在干什么(对于每个 worker，线程或者异步 core)。
 
-Enabling the stats server is easy:
+打开 stats server 很简单：
 
 .. code-block:: ini
 
@@ -301,24 +317,27 @@ Enabling the stats server is easy:
    harakiri = 30
    stats = 127.0.0.1:5000
    
-just bind it to an address (UNIX or TCP) and just connect (you can use telnet too) to it to receive a JSON representation of your instance.
+只需要把它绑定到一个地址(UNIX domain sockt 或者 TCP)然后(你也可以使用 telnet)连接它，然后就会
+返回你的实例的一个 JSON 数据。
 
-The ``uwsgitop`` application (you can find it in the official github repository) is an example of using the stats server to have a top-like realtime monitoring tool (with colors !!!)
+``uwsgitop`` 应用(你可以在官方的 github 仓库中找到它)就是一个使用 stats 
+server 的例子，它和 top 这种实时监控的工具类似(彩色的!!!)
 
 
 Offloading
 **********
 
-:doc:`OffloadSubsystem` allows you to free your workers as soon as possible when some specific pattern matches and can be delegated
-to a pure-c thread. Examples are sending static file from the filesystem, transferring data from the network to the client and so on.
+:doc:`OffloadSubsystem` 使得你可以在某些模式满足时释放你的 worker，并且把工作委托给一个纯 c 的线程。
+这样例子比如有从文件系统传递静态文件，通过网络向客户端传输数据等等。
 
-Offloading is very complex, but its use is transparent to the end user. If you want to try just add --offload-threads <n> where <n> is the number of threads to spawn (one for cpu is a good value).
+Offloading 非常复杂，但它的使用对用户来说是透明的。如果你想试试的话加上 ``--offload-threads <n>`` 选项，
+这里的 `<n>` 是 spawn 的线程数(以 CPU 数目的线程数启动是一个不错的值)。
 
-When offload threads are enabled, all of the parts that can be optimized will be automatically detected.
+当 offload threads 被启用时，所有可以被优化的部分都可以自动被检测到。
 
 
-And now
-*******
+那么现在...
+***********
 
-You should already be able to go in production with such few concepts, but uWSGI is an enormous project with hundreds of features
-and configurations. If you want to be a better sysadmin, continue reading the full docs.
+有了这些很少的概念你就已经可以进入到生产中了，但是 uWSGI 是一个拥有上百个特性和配置的生态系统。
+如果你想成为一个更好的系统管理员，继续阅读完整的文档吧。

@@ -99,7 +99,7 @@ Python 3.x 版本如下：
 
 这就是全部了。
 
-.. note:: 当你前端 web 服务器时不要使用 --http 选项，使用 --http-socket。继续阅读快速入门来理解为什么要这么做。
+.. note:: 当你有前端 web 服务器时不要使用 --http 选项，使用 --http-socket。继续阅读快速入门来理解为什么要这么做。
 
 添加并发和监控
 **************
@@ -122,7 +122,7 @@ Python 3.x 版本如下：
    uwsgi --http :9090 --wsgi-file foobar.py --master --processes 4 --threads 2 --stats 127.0.0.1:9191
 
 向你的应用发送几个请求然后 telnet 到 9191 端口，你将得到大量有趣的信息。你可能想要使用
-"uwsgitop" (使用``pip install`` 你就能得到它)，这是一个类似 top 的工具，用于监控应用实例。
+"uwsgitop" (使用 ``pip install`` 你就能得到它)，这是一个类似 top 的工具，用于监控应用实例。
 
 .. attention::
 
@@ -166,7 +166,7 @@ uWSGI 通常和 HTTP，FastCGI，SCGI 以及它自己特有的协议 "uwsgi" (�
 开机自启动 uWSGI
 ****************
 
-如果打算打开 vi 写一个 init.d 脚本来启动 uWSGI，坐下来冷静一下然后先确保
+如果你打算打开 vi 写一个 init.d 脚本来启动 uWSGI，坐下来冷静一下然后先确保
 你的系统没有提供一个更好(更现代化)的方式。
 
 没一个发行版会选择一个启动系统 (:doc:`Upstart<Upstart>`, :doc:`Systemd`...)，除此之外也有许多

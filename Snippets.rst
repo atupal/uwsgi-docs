@@ -1,13 +1,13 @@
-Snippets
+代码片段
 ========
 
-This is a collection of some of the most "fun" uses of uWSGI features.
+这是一些最"有趣"的 uWSGI 特性使用的合集。
 
 X-Sendfile emulation
 --------------------
 
-Even if your frontend proxy/webserver does not support X-Sendfile (or cannot access your static resources) you can emulate
-it using uWSGI's internal offloading (your process/thread will delegate the actual static file serving to offload threads).
+甚至你的前端代理/web 服务器不支持 X-Sendfile (或者不能访问到你的静态资源)你可以使用 uWSGI 内部的
+offloading(你的进程/线程把服务静态文件的实际工作交给 offload 线程) 来模拟它。
 
 .. code-block:: ini
 
@@ -25,10 +25,10 @@ it using uWSGI's internal offloading (your process/thread will delegate the actu
    response-route-if-not = empty:${X_SENDFILE} static:${X_SENDFILE}
    
 
-Force HTTPS
------------
+强制 HTTPS
+----------
 
-This will force HTTPS for the whole site.
+这会强制在你的整个网站上使用 HTTPS。
 
 .. code-block:: ini
 
@@ -38,7 +38,7 @@ This will force HTTPS for the whole site.
    plugins = router_redirect
    route-if-not = equal:${HTTPS};on redirect-permanent:https://${HTTP_HOST}${REQUEST_URI}
    
-And this only for ``/admin``
+只是对 ``/admin`` 强制 https：
 
 .. code-block:: ini
 
@@ -53,7 +53,7 @@ And this only for ``/admin``
    route-label = https
    route-if-not = equal:${HTTPS};on redirect-permanent:https://${HTTP_HOST}${REQUEST_URI}
    
-Eventually you may want to send HSTS (HTTP Strict Transport Security) header too.
+最后你可能还想要发送 HSTS(HTTP Strict Transport Security) http 头。
 
 .. code-block:: ini
 
@@ -65,14 +65,15 @@ Eventually you may want to send HSTS (HTTP Strict Transport Security) header too
    route-if = equal:${HTTPS};on addheader:Strict-Transport-Security: max-age=31536000
    
    
-Python Auto-reloading (DEVELOPMENT ONLY!)
------------------------------------------
+Python 自动重新加载(Python auto-reloading)(仅限于在开发中使用！)
+----------------------------------------------------------------
 
-In production you can monitor file/directory changes for triggering reloads (touch-reload, fs-reload...).
+在生产环境中你可以检测文件/目录的改动，然后自动重新加载(touch-reload, fs-reload...)。
 
-During development having a monitor for all of the loaded/used python modules can be handy. But please use it only during development.
+在开发的时候有一个检测所有加载的/使用的 python 模块改动会非常方便。但是请仅仅在开发过程
+中使用它。
 
-The check is done by a thread that scans the modules list with the specified frequency:
+检测是通过一个线程以设定的频率扫描模块列表实现的：
 
 .. code-block:: ini
 
@@ -80,20 +81,21 @@ The check is done by a thread that scans the modules list with the specified fre
    ...
    py-autoreload = 2
    
-will check for python modules changes every 2 seconds and eventually restart the instance.
+这将会以每隔两秒的频率检测 python 模块的改动，然后有改动的话就重新启动实例。
 
-And again:
+再次说明：
 
-.. warning:: Use this only in development.
+.. warning:: 只能在开发中使用它，不要在线上环境使用。
 
 
 Full-Stack CGI setup
 --------------------
 
 This example spawned from a uWSGI mainling-list thread.
+这个例子产生自一个 uWSGI 邮件列表。
 
-We have static files in /var/www and cgis in /var/cgi. Cgi will be accessed using the /cgi-bin
-mountpoint. So /var/cgi/foo.lua will be run on request to /cgi-bin/foo.lua
+我的静态文件在 /var/www 目录下，cgi 在 /var/cgi 下，Cgi 通过 /cgi-bin 路径可以访问到。
+所以 /var/cig/foo.lua 会在访问 /cgi-bin/foo.lua 时运行。
 
 .. code-block:: ini
 
@@ -132,10 +134,10 @@ mountpoint. So /var/cgi/foo.lua will be run on request to /cgi-bin/foo.lua
    cgi-index = index.lua
    
    
-Multiple flask apps in different mountpoints
---------------------------------------------
+在不同的 url 路径下使用多个 flask 应用
+--------------------------------------
 
-Let's write three flask apps:
+让我们写三个 flask 应用：
 
 .. code-block:: py
 
@@ -169,15 +171,15 @@ Let's write three flask apps:
    def hello():
        return "Hello World! i am app3"
 
-each will be mounted respectively in /app1, /app2, /app3
+每个会被相应地挂载到 /app1, /app2, /app3
 
-To mount an application with a specific "key" in uWSGI, you use the --mount option:
+在 uWSGI 中要把一个应用挂载到一个特定的"key"，需要使用 --mount 选项：
 
 ```
 --mount <mountpoint>=<app>
 ```
 
-in our case we want to mount 3 python apps, each keyed with what will be the WSGI SCRIPT_NAME variable:
+在我们的例子中我们想要挂载三个 python 应用，每一个以相应的 WSGI 脚本名字作为 key：
 
 .. code-block :: ini
    
@@ -197,29 +199,29 @@ in our case we want to mount 3 python apps, each keyed with what will be the WSG
 
 
 
-now directly point your webserver.proxy to the instance socket (without doing additional configurations)
+现在直接把你的 webserver.proxy 指向你的实例 socket (不需要任何其他的配置)
 
-Note: by default every app is loaded in a new python interpreter (that means a pretty-well isolated namespace for each app).
-If you want all of the app to be loaded in the same python vm, use the --single-interpreter option.
+Note: 每个应用默认会启动一个新的 python 解释器(这意味着每个应用的名字空间是相互隔离的)。
+如果你希望所有的应用都运行同一个 python 虚拟机上的话，使用 --single-interpreter 选项。
 
-Another note: you may find reference to an obscure "modifier1 30" trick. It is deprecated and extremely ugly. uWSGI is able to rewrite request variables in lot of advanced ways
+Another note: 你可能已经看到 "modifier1 30" 这个明显的陷阱了。它已经被弃用了，而且它相当丑陋。uWSGI 有许多的方式来重写请求的变量。
 
-Final note: by default, the first loaded app is mounted as the "default one". That app will be served when no mountpoint matches.
+Final note: 第一个加载的应用默认为是缺省挂载应用。当没有挂载点匹配时那个应用便会起作用。
 
 
-rbenv on OSX (should work on other platforms too)
+在 OSX 上使用 rbenv (也应该能在其他的平台上工作)
 -------------------------------------------------
 
-install rbenv
+安装 rbenv
 
 .. code-block:: sh
 
    brew update
    brew install rbenv ruby-build
    
-(do not set the magic line in .bash_profile as described in the classic howto, as we want to not clobber the environment, and allow uWSGI to get rid of it)
+(不要在 .bash_profile 中设置 magic line，因为我们不想污染系统环境并且导致 uWSGI 异常)
 
-get a uWSGI tarball and build the 'nolang' version (it is a monolithic one without language plugins compiled in)
+获取一个 uWSGI 源码包，然后编译成 'nolang' 版本(即一个没有编译任何语言插件进去的版本)
 
 .. code-block:: sh
 
@@ -228,14 +230,14 @@ get a uWSGI tarball and build the 'nolang' version (it is a monolithic one witho
    cd uwsgi-xxx
    make nolang
    
-now start installing the ruby versions you need
+现在开始安装你需要的 ruby 版本
 
 .. code-block:: sh
 
    rbenv install 1.9.3-p551
    rbenv install 2.1.5
    
-and install the gems you need (sinatra in this case):
+然后安装你需要的 gems(即 sinatra):
 
 .. code-block:: sh
 
@@ -255,7 +257,7 @@ and install the gems you need (sinatra in this case):
    /Users/roberta/.rbenv/versions/2.1.5/bin/gem install sinatra
    PATH=/Users/roberta/.rbenv/versions/2.1.5/bin:$PATH ./uwsgi --build-plugin "plugins/rack rack_215"
    
-now to switch from one ruby to another, just change the plugin:
+现在切换到另外一个 ruby，只需要改变插件就可以了：
 
 .. code-block:: ini
 
@@ -264,7 +266,7 @@ now to switch from one ruby to another, just change the plugin:
    rack = config.ru
    http-socket = :9090
    
-or 
+或者
 
 .. code-block:: ini
 
@@ -273,7 +275,7 @@ or
    rack = config.ru
    http-socket = :9090
 
-ensure plugins are stored in the current working directory, or set the plugins-dir directive or specify them with absolute path like
+请确保插件存储在当前的工作目录中，或者直接设置插件目录，或者指定绝对路径，就像这样：
 
 .. code-block:: ini
 
